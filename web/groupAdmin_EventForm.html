@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>فرم رویداد | سامانه رویدادهای دانشکده</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="/events.html">
+        <span class="brand-mark">ر</span>
+        <h1>سامانه رویدادهای دانشکده</h1>
+      </a>
+      <nav id="nav"></nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-hero" style="padding-bottom:0">
+      <a class="kicker" href="/groupAdmin_dashboard.html">&larr; بازگشت به داشبورد</a>
+    </div>
+    <div class="card" style="margin-top:16px; max-width:480px">
+      <h3 id="form-heading">رویداد جدید</h3>
+      <form id="event-form">
+        <input type="text" name="title" placeholder="عنوان رویداد" required />
+        <textarea name="description" placeholder="توضیحات" rows="4"></textarea>
+        <input type="text" name="location" placeholder="مکان برگزاری" required />
+        <input type="number" name="capacity" placeholder="ظرفیت" min="1" required />
+        <label class="field-label">زمان برگزاری</label>
+        <input type="datetime-local" name="event_time" required />
+        <button type="submit">ذخیره</button>
+        <p id="form-msg" class="error"></p>
+      </form>
+    </div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/groupAdmin.js"></script>
+  <script>
+    function formatDateTime(iso) {
+      return new Date(iso).toLocaleString("fa-IR", { dateStyle: "medium", timeStyle: "short" });
+    }
+    initEventForm();
+  </script>
+</body>
+</html>

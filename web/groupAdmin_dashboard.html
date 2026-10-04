@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>پنل مدیر گروه | سامانه رویدادهای دانشکده</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="/events.html">
+        <span class="brand-mark">ر</span>
+        <h1>سامانه رویدادهای دانشکده</h1>
+      </a>
+      <nav id="nav"></nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-hero" style="padding-bottom:22px">
+      <div class="page-toolbar">
+        <div>
+          <h2>مدیریت رویدادهای رشته</h2>
+          <p class="lead">رویدادهای رشته‌ات رو مدیریت کن، شرکت‌کننده‌ها رو ببین.</p>
+        </div>
+        <a href="/groupAdmin_EventForm.html"><button>+ رویداد جدید</button></a>
+      </div>
+    </div>
+    <div id="stat-strip" class="stat-strip" style="display:none"></div>
+    <div id="admin-events-list"></div>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/event.js"></script>
+  <script src="/js/groupAdmin.js"></script>
+  <script>initAdminDashboard();</script>
+</body>
+</html>
