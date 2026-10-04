@@ -1,0 +1,50 @@
+# Run everything (database + web app) with a single command:
+#
+#   docker compose up --build
+#
+# Then open http://localhost:8080
+#
+# The database schema and the default admin (admin / 12345678) are created
+# automatically from ./database/init the first time the database starts.
+# To wipe the data and start over:  docker compose down -v
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: university-events-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: university_events
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Runs *.sql files in alphabetical order, only when the data volume is empty.
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d university_events"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    container_name: university-events-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: "8080"
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: university_events
+      DB_SSLMODE: disable
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      JWT_EXPIRY_HOURS: ${JWT_EXPIRY_HOURS:-72}
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
