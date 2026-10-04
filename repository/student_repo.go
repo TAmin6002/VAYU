@@ -57,8 +57,7 @@ func (r *StudentRepository) GetByID(ctx context.Context, id string) (*models.Stu
 	return r.getOne(ctx, "id", id)
 }
 
-// getOne loads a single student by a column that is either "id" or "email"
-// (never user-supplied, so building the query this way is safe).
+
 func (r *StudentRepository) getOne(ctx context.Context, column, value string) (*models.Student, error) {
 	query := `
 		SELECT id, full_name, email, student_number, password_hash, created_at, updated_at

@@ -19,10 +19,6 @@ func NewParticipationRepository(db *sql.DB) *ParticipationRepository {
 	return &ParticipationRepository{db: db}
 }
 
-// Register enrolls a logged-in student in an event (the form's name, email
-// and student number are stored with the registration), enforcing the
-// event's capacity inside a single database transaction so concurrent
-// requests can never over-book the event (classic race condition otherwise).
 func (r *ParticipationRepository) Register(ctx context.Context, studentID, fullName, email, studentNumber, eventID string) (*models.Participation, error) {
 	tx, err := r.db.BeginTx(ctx, &sql.TxOptions{Isolation: sql.LevelReadCommitted})
 	if err != nil {
@@ -30,9 +26,7 @@ func (r *ParticipationRepository) Register(ctx context.Context, studentID, fullN
 	}
 	defer tx.Rollback() // no-op if committed
 
-	// Lock the event row for the duration of the transaction so two
-	// concurrent registrations for the same event can't both pass the
-	// capacity check before either commits.
+
 	var capacity int
 	err = tx.QueryRowContext(ctx,
 		`SELECT capacity FROM events WHERE id = $1 FOR UPDATE`, eventID,
@@ -80,8 +74,7 @@ func (r *ParticipationRepository) Register(ctx context.Context, studentID, fullN
 	return &p, nil
 }
 
-// Cancel marks the student's active registration for the event as
-// cancelled. Cancelled rows are kept for history.
+
 func (r *ParticipationRepository) Cancel(ctx context.Context, eventID, studentID string) error {
 	res, err := r.db.ExecContext(ctx,
 		`UPDATE participations SET status = 'cancelled' WHERE event_id = $1 AND student_id = $2 AND status = 'registered'`,
@@ -100,8 +93,6 @@ func (r *ParticipationRepository) Cancel(ctx context.Context, eventID, studentID
 	return nil
 }
 
-// ListByStudent returns the events the student is currently registered
-// for (cancelled registrations are not included), soonest event first.
 func (r *ParticipationRepository) ListByStudent(ctx context.Context, studentID string) ([]models.MyRegistration, error) {
 	query := `
 		SELECT p.event_id, p.registered_at
