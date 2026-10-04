@@ -1,0 +1,36 @@
+# --- Environment / secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Build output ---
+/bin/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# --- Go tooling ---
+# vendor/ (uncomment if you ever vendor dependencies)
+# /vendor/
+
+# --- sqlc generated code (regenerate with `make sqlc-generate`) ---
+/database/sqlcgen/
+
+# --- Logs ---
+*.log
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# --- Local database data (if ever created outside Docker) ---
+/pgdata/*.zip
