@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>ورود | سامانه رویدادهای دانشکده</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="auth-shell">
+    <section class="auth-brand">
+      <span class="brand-mark">ر</span>
+      <h2>رویدادهای دانشکده، همه‌جا یک‌جا</h2>
+      <p>کارگاه‌ها، مسابقات و نشست‌های رشته‌ی خودت رو ببین، جا رزرو کن و از تکمیل ظرفیت جا نمون.</p>
+      <p><a href="/events.html">بدون ورود، مشاهده‌ی رویدادها &larr;</a></p>
+    </section>
+
+    <section class="auth-panel">
+      <div class="card">
+        <h3 style="margin-top:0">ورود به سامانه</h3>
+        <form id="login-form">
+          <input type="text" name="username" placeholder="ایمیل (دانشجو) یا نام کاربری (ادمین)" autocomplete="username" required />
+          <input type="password" name="password" placeholder="رمز عبور" autocomplete="current-password" required />
+          <button type="submit">ورود</button>
+          <p id="login-msg" class="error"></p>
+        </form>
+        <p style="margin-bottom:0">دانشجو هستید و حساب ندارید؟ <a href="/signup.html">ثبت‌نام دانشجو</a></p>
+      </div>
+    </section>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    const loginForm = document.getElementById("login-form");
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("login-msg");
+      msg.textContent = "";
+      try {
+        const result = await api.login({
+          username: loginForm.username.value,
+          password: loginForm.password.value,
+        });
+        auth.saveSession(result.token, result.role, result.user);
+        window.location.href =
+          result.role === "admin" ? "/groupAdmin_dashboard.html" : "/events.html";
+      } catch (err) {
+        msg.textContent = err.message;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>ثبت‌نام دانشجو | سامانه رویدادهای دانشکده</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="auth-shell">
+    <section class="auth-brand">
+      <span class="brand-mark">ر</span>
+      <h2>رویدادهای دانشکده، همه‌جا یک‌جا</h2>
+      <p>کارگاه‌ها، مسابقات و نشست‌های رشته‌ی خودت رو ببین، جا رزرو کن و از تکمیل ظرفیت جا نمون.</p>
+      <p><a href="/events.html">بدون ورود، مشاهده‌ی رویدادها &larr;</a></p>
+    </section>
+
+    <section class="auth-panel">
+      <div class="card">
+        <h3 style="margin-top:0">ساخت حساب دانشجو</h3>
+        <form id="signup-form">
+          <input type="text" name="full_name" placeholder="نام و نام خانوادگی" autocomplete="name" required />
+          <input type="email" name="email" placeholder="ایمیل" autocomplete="email" required />
+          <input type="text" name="student_number" placeholder="شماره دانشجویی" inputmode="numeric" autocomplete="off" pattern="[0-9۰-۹٠-٩]{5,20}" title="شماره دانشجویی باید فقط شامل ارقام باشد (۵ تا ۲۰ رقم)" required />
+          <input type="password" name="password" placeholder="رمز عبور (حداقل ۸ کاراکتر)" autocomplete="new-password" minlength="8" maxlength="72" required />
+          <button type="submit">ساخت حساب</button>
+          <p id="signup-msg" class="error"></p>
+        </form>
+        <p style="margin-bottom:0">قبلاً ثبت‌نام کرده‌اید؟ <a href="/login.html">ورود</a></p>
+      </div>
+    </section>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    const signupForm = document.getElementById("signup-form");
+
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("signup-msg");
+      msg.textContent = "";
+      try {
+        const result = await api.signup({
+          full_name: signupForm.full_name.value,
+          email: signupForm.email.value,
+          student_number: signupForm.student_number.value.trim(),
+          password: signupForm.password.value,
+        });
+        auth.saveSession(result.token, result.role, result.user);
+        window.location.href = "/events.html";
+      } catch (err) {
+        msg.textContent = err.message;
+      }
+    });
+  </script>
+</body>
+</html>
