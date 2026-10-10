@@ -55,17 +55,20 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* decorative mesh background, fixed behind everything */
+/* smooth cream background with depth: soft light from above, warm
+   shading toward the bottom and a faint vignette. No texture. */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(680px 420px at 8% 0%, rgba(61, 125, 92, 0.20), transparent 65%),
-    radial-gradient(600px 460px at 100% 8%, rgba(161, 92, 52, 0.10), transparent 60%),
-    radial-gradient(900px 600px at 50% 100%, rgba(207, 227, 209, 0.55), transparent 70%),
-    var(--cream-50);
+    radial-gradient(ellipse 120% 90% at 50% 45%, transparent 58%, rgba(196, 174, 122, 0.16) 100%),
+    radial-gradient(900px 520px at 50% -6%, rgba(255, 253, 244, 0.95), transparent 70%),
+    radial-gradient(700px 480px at 6% 2%, rgba(61, 125, 92, 0.13), transparent 65%),
+    radial-gradient(640px 460px at 100% 8%, rgba(161, 92, 52, 0.07), transparent 60%),
+    radial-gradient(1300px 720px at 50% 118%, rgba(226, 211, 170, 0.6), transparent 70%),
+    linear-gradient(180deg, #fcf8ec 0%, #f5eddb 100%);
 }
 
 h1, h2, h3, h4 {
@@ -97,23 +100,58 @@ svg {
   display: flex;
   justify-content: center;
   padding: 0 16px;
-  margin-bottom: 8px;
+  margin-bottom: 26px;
 }
 
 .site-header .bar {
+  position: relative;
   width: 100%;
   max-width: 1040px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 14px;
-  background: rgba(17, 38, 29, 0.92);
-  backdrop-filter: blur(14px);
+  background: linear-gradient(135deg, var(--forest-700) 0%, var(--forest-800) 55%, #142e24 100%);
   color: #fdfbf3;
-  padding: 10px 12px 10px 18px;
-  border-radius: var(--r-pill);
-  box-shadow: var(--shadow-lift);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 10px 8px 14px;
+  border-radius: 18px;
+  box-shadow: 0 12px 26px -16px rgba(17, 38, 29, 0.75);
+}
+
+/* soft, diffused light under the bar, tinted from the site palette:
+   forest -> sage -> a touch of warm clay */
+.site-header .bar::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 6%;
+  right: 6%;
+  bottom: -12px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(90deg,
+    rgba(61, 125, 92, 0.75) 0%,
+    rgba(90, 154, 118, 0.7) 40%,
+    rgba(169, 201, 174, 0.65) 70%,
+    rgba(196, 140, 92, 0.55) 100%);
+  filter: blur(18px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* wider, fainter halo */
+.site-header .bar::after {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  right: 0;
+  bottom: -30px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 30%, rgba(90, 154, 118, 0.28), rgba(90, 154, 118, 0) 70%);
+  filter: blur(14px);
+  pointer-events: none;
 }
 
 .brand {
@@ -157,12 +195,24 @@ nav a {
   font-size: 13.5px;
   font-weight: 500;
   padding: 8px 14px;
-  border-radius: var(--r-pill);
+  border-radius: 12px;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
 nav a:hover {
   background: rgba(255, 255, 255, 0.12);
+}
+
+nav a.nav-cta {
+  margin-right: 4px;
+  padding: 8px 18px;
+  font-weight: 700;
+  color: var(--forest-900, #17352a);
+  background: var(--cream-100);
+}
+
+nav a.nav-cta:hover {
+  background: var(--cream-50);
 }
 
 .nav-user {
@@ -177,6 +227,7 @@ nav button {
   margin-right: 2px;
   padding: 8px 16px;
   font-size: 13px;
+  border-radius: 12px;
 }
 
 .nav-logout {
@@ -558,107 +609,338 @@ textarea:focus {
   font-weight: 700;
 }
 
-/* ---------------- Auth split screen ---------------- */
+/* ---------------- Auth (login / signup) ---------------- */
 
 .auth-shell {
   min-height: 100vh;
   display: flex;
+  gap: 16px;
+  padding: 16px;
 }
 
+.ic {
+  flex-shrink: 0;
+}
+
+/* dark brand panel: aurora glow, rings and light grain */
 .auth-brand {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 60px;
-  background: radial-gradient(700px 500px at 20% 15%, rgba(90, 154, 118, 0.35), transparent 60%),
-    linear-gradient(160deg, var(--forest-950), var(--forest-800));
-  color: #fdfbf3;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 40px 48px;
+  border-radius: 32px;
+  color: #fdfbf3;
+  background:
+    radial-gradient(520px 380px at 85% 8%, rgba(90, 154, 118, 0.55), transparent 62%),
+    radial-gradient(460px 360px at 10% 95%, rgba(161, 92, 52, 0.30), transparent 65%),
+    radial-gradient(700px 500px at 50% 50%, rgba(31, 74, 56, 0.9), transparent 75%),
+    linear-gradient(160deg, var(--forest-800), var(--forest-950));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 30px 60px -30px rgba(17, 38, 29, 0.6);
 }
 
 .auth-brand::after {
   content: "";
   position: absolute;
-  width: 340px;
-  height: 340px;
+  z-index: -1;
+  width: 520px;
+  height: 520px;
+  left: -180px;
+  bottom: -220px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  top: -80px;
-  left: -80px;
+  box-shadow: 0 0 0 60px rgba(255, 255, 255, 0.025), 0 0 0 130px rgba(255, 255, 255, 0.018);
 }
 
-.auth-brand .brand-mark {
-  width: 46px;
-  height: 46px;
-  font-size: 19px;
-  margin-bottom: 28px;
-}
-
-.auth-brand h2 {
+.auth-home {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px 6px 8px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: #fdfbf3;
-  font-size: clamp(26px, 3vw, 34px);
-  max-width: 380px;
-  line-height: 1.4;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 700;
+  transition: background 0.2s ease;
 }
 
-.auth-brand p {
+.auth-home:hover {
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.auth-home .brand-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.auth-brand-body h2 {
+  color: #fdfbf3;
+  font-size: clamp(28px, 3.2vw, 42px);
+  line-height: 1.4;
+  max-width: 440px;
+}
+
+.auth-brand-body h2 .hl {
+  background: linear-gradient(120deg, #cfe3d1, #f2e2c9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.auth-brand-body > p {
   color: var(--sage-200);
   margin-top: 14px;
-  max-width: 360px;
+  max-width: 400px;
   font-size: 14.5px;
 }
 
+.auth-points {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.auth-points li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #eef4ec;
+}
+
+.pt-ic {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d8ecd9;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.auth-guest {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--sage-200);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 9px 18px;
+  border-radius: var(--r-pill);
+  border: 1px dashed rgba(207, 227, 209, 0.4);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.auth-guest:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* form side */
 .auth-panel {
-  width: 440px;
+  width: 500px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 24px;
 }
 
 .auth-panel .card {
   width: 100%;
-  box-shadow: none;
-  border: none;
-  padding: 0;
-  background: transparent;
+  max-width: 400px;
+  padding: 30px 30px 26px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #fffefa, #fffcf2);
+  border: 1px solid var(--stone-200);
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 2px 0 rgba(221, 208, 174, 0.55),
+    0 34px 60px -34px rgba(17, 38, 29, 0.38);
 }
 
-.auth-tabs {
-  display: flex;
+.auth-panel .card h3 {
+  font-size: 22px;
+  margin: 22px 0 4px;
+}
+
+.auth-sub {
+  color: var(--ink-600);
+  font-size: 13.5px;
+  margin-bottom: 20px;
+}
+
+.auth-mobile-brand {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  text-decoration: none;
+  color: var(--forest-950);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+/* segmented login / signup switch */
+.auth-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 4px;
-  margin-bottom: 22px;
-  background: var(--sage-100);
   padding: 5px;
   border-radius: var(--r-pill);
+  background: var(--cream-100);
+  box-shadow: inset 0 1px 3px rgba(17, 38, 29, 0.12);
 }
 
-.auth-tabs button {
-  flex: 1;
+.auth-switch a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 8px;
+  border-radius: var(--r-pill);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-600);
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.auth-switch a:hover {
+  color: var(--forest-700);
+}
+
+.auth-switch a.active {
+  background: var(--forest-950);
+  color: #fdfbf3;
+  box-shadow: 0 6px 14px -6px rgba(17, 38, 29, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* fields with leading icon */
+.auth-panel form {
+  max-width: none;
+  gap: 12px;
+}
+
+.field {
+  position: relative;
+  display: block;
+}
+
+.field .field-ic {
+  position: absolute;
+  inset-inline-start: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ink-400);
+  pointer-events: none;
+  transition: color 0.15s ease;
+}
+
+.field input {
+  width: 100%;
+  padding: 14px 46px;
+  background: #fffef9;
+  border-radius: 16px;
+  box-shadow: inset 0 1px 2px rgba(17, 38, 29, 0.06);
+}
+
+.field:focus-within .field-ic {
+  color: var(--forest-500);
+}
+
+.field-toggle {
+  position: absolute;
+  inset-inline-end: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
+  color: var(--ink-400);
+  box-shadow: none;
+  border-radius: 50%;
+}
+
+.field-toggle:hover {
+  background: var(--sage-100);
   color: var(--forest-700);
   box-shadow: none;
-  border-radius: var(--r-pill);
-  padding: 9px 0;
-  font-size: 13.5px;
+  transform: translateY(-50%);
 }
 
-.auth-tabs button.active {
-  background: var(--forest-700);
-  color: #fdfbf3;
-  box-shadow: var(--shadow-soft);
+.field-toggle .on-hide { display: none; }
+.field-toggle.is-visible .on-show { display: none; }
+.field-toggle.is-visible .on-hide { display: block; }
+
+.btn-submit {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 22px;
+  font-size: 15px;
+  background: linear-gradient(180deg, var(--forest-500), var(--forest-800));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 14px 26px -12px rgba(23, 53, 42, 0.7);
+}
+
+.btn-submit:hover {
+  background: linear-gradient(180deg, var(--forest-400), var(--forest-700));
+}
+
+.btn-submit .ic {
+  transform: scaleX(-1); /* arrow points in the reading direction (left in RTL) */
+}
+
+.auth-panel .error {
+  min-height: 20px;
+  margin: 0;
+}
+
+.auth-foot {
+  margin: 8px 0 0;
+  padding-top: 16px;
+  border-top: 1px dashed var(--stone-300);
+  font-size: 13px;
+  color: var(--ink-600);
+  text-align: center;
+}
+
+.auth-foot a {
+  font-weight: 700;
 }
 
 @media (max-width: 860px) {
-  .auth-brand {
-    display: none;
-  }
-  .auth-panel {
-    width: 100%;
-  }
+  .auth-shell { padding: 0; }
+  .auth-brand { display: none; }
+  .auth-panel { width: 100%; padding: 20px 16px; }
+  .auth-panel .card { padding: 24px 20px 22px; }
+  .auth-mobile-brand { display: flex; }
 }
 
 /* ---------------- Table ---------------- */
@@ -833,9 +1115,123 @@ tbody tr:last-child td {
 @media (max-width: 640px) {
   .site-header .bar {
     flex-wrap: wrap;
-    border-radius: var(--r-lg);
+    border-radius: 18px;
   }
   nav {
     flex-wrap: wrap;
   }
+}
+
+/* ---------------- Landing hero with photo clusters ---------------- */
+
+main.landing-main {
+  max-width: 1280px;
+}
+
+.landing-stage {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 480px) 1fr;
+  align-items: center;
+  column-gap: 24px;
+  direction: ltr; /* photo clusters keep the same visual sides */
+  min-height: calc(100vh - 150px);
+  padding: 16px 0 24px;
+}
+
+.landing-stage .landing-hero {
+  direction: rtl;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+}
+
+.landing-hero h2 .hl {
+  color: var(--forest-500);
+}
+
+/* two mirrored columns, every photo the same display width */
+.landing-photos {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+  min-width: 0;
+}
+
+.landing-photos-start { align-items: flex-end; }
+.landing-photos-end   { align-items: flex-start; }
+
+.lp {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  user-select: none;
+}
+
+/* small, rounded action buttons with icons */
+.landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn-landing {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--r-pill);
+  background: var(--forest-950);
+  color: #fdfbf3;
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.4;
+  text-decoration: none;
+  border: 1.5px solid var(--forest-950);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.btn-landing:hover {
+  background: var(--forest-700);
+  border-color: var(--forest-700);
+  box-shadow: 0 10px 24px -8px rgba(23, 53, 42, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-landing.ghost {
+  background: transparent;
+  color: var(--forest-700);
+  border-color: var(--stone-300);
+  box-shadow: none;
+}
+
+.btn-landing.ghost:hover {
+  background: var(--sage-100);
+  border-color: var(--sage-300);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 1100px) {
+  .landing-stage { column-gap: 12px; grid-template-columns: 1fr minmax(0, 400px) 1fr; }
+  .lp { max-width: 220px; }
+}
+
+@media (max-width: 860px) {
+  .landing-stage {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 8px;
+    min-height: 0;
+    padding-top: 8px;
+  }
+  .landing-stage .landing-hero {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding: 20px 4px 8px;
+  }
+  .landing-photos { grid-row: 2; align-items: center; gap: 12px; }
+  .lp { max-width: 190px; }
 }

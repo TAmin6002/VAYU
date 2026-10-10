@@ -28,8 +28,7 @@ func (r *EventRepository) Create(ctx context.Context, e *models.Event) error {
 	).Scan(&e.ID, &e.CreatedAt, &e.UpdatedAt)
 }
 
-// ErrCapacityBelowRegistered is returned when an update would set an
-// event's capacity below the number of participants already registered.
+
 var ErrCapacityBelowRegistered = errors.New("capacity is below the current registered count")
 
 func (r *EventRepository) Update(ctx context.Context, id string, in models.UpdateEventInput) (*models.Event, error) {
@@ -61,8 +60,7 @@ func (r *EventRepository) Update(ctx context.Context, id string, in models.Updat
 	return &e, nil
 }
 
-// registeredCount returns how many participants currently hold a
-// 'registered' status for the given event.
+
 func (r *EventRepository) registeredCount(ctx context.Context, eventID string) (int, error) {
 	var count int
 	err := r.db.QueryRowContext(ctx,
@@ -108,8 +106,7 @@ func (r *EventRepository) GetByID(ctx context.Context, id string) (*models.Event
 	return &e, nil
 }
 
-// List returns all events ordered by event_time ascending (soonest first),
-// including a live count of registered participants for each.
+
 func (r *EventRepository) List(ctx context.Context) ([]models.EventWithStats, error) {
 	query := `
 		SELECT
