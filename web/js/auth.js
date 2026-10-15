@@ -71,7 +71,11 @@ function renderNav() {
     links += `<a href="/myevents.html">ثبت‌نام‌های من</a>
               <button id="logout-btn" class="nav-logout">خروج</button>`;
   } else {
+<<<<<<< HEAD
     links += `<a href="/login.html">ورود</a><a href="/signup.html">ثبت‌نام دانشجو</a>`;
+=======
+    links += `<a href="/login.html">ورود</a><a class="nav-cta" href="/signup.html">ثبت‌نام دانشجو</a>`;
+>>>>>>> feature/public-frontend
   }
 
   nav.innerHTML = links;
@@ -80,4 +84,24 @@ function renderNav() {
   if (logoutBtn) logoutBtn.addEventListener("click", () => auth.logout());
 }
 
+<<<<<<< HEAD
 document.addEventListener("DOMContentLoaded", renderNav);
+=======
+// Show/hide password buttons (login + signup pages).
+function initPasswordToggles() {
+  document.querySelectorAll("[data-toggle-password]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const input = btn.parentElement.querySelector("input");
+      if (!input) return;
+      const show = input.type === "password";
+      input.type = show ? "text" : "password";
+      btn.classList.toggle("is-visible", show);
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderNav();
+  initPasswordToggles();
+});
+>>>>>>> feature/public-frontend
